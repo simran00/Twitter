@@ -60,5 +60,15 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvScreenName.setText(tweet.user.screenName);
             Glide.with(context).load(tweet.user.profileImageUrl).into(ivProfileImage);
         }
+
+        public void clear() {
+            tweets.clear();
+            notifyDataSetChanged();
+        }
+
+        public void addAll(List<Tweet> list) {
+            tweets.addAll(list);
+            notifyDataSetChanged();
+        }
     }
 }
