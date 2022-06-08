@@ -66,20 +66,29 @@ public class TimelineActivity extends AppCompatActivity {
                 fetchTimelineAsync(0);
             }
 
+
             private void fetchTimelineAsync(int page) {
                 client.getHomeTimeline(new JsonHttpResponseHandler() {
-                    public void onSuccess(JSONArray json) {
+                    @Override
+                    public void onSuccess(int statusCode, Headers headers, JSON json) {
+                        JSONArray jsonArray = json.jsonArray;
                         // Remember to CLEAR OUT old items before appending in the new ones
                         adapter.clear();
                         // ...the data has come back, add new items to your adapter...
-                        adapter.addAll(tweets);
+                        try {
+                            adapter.addAll(Tweet.fromJsonArray(jsonArray));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                         // Now we call setRefreshing(false) to signal refresh has finished
                         swipeContainer.setRefreshing(false);
                     }
 
-                    public void onFailure(Throwable e) {
+                    @Override
+                    public void onFailure(int statusCode, Headers headers, String response, Throwable e) {
                         Log.d("DEBUG", "Fetch timeline error: " + e.toString());
                     }
+
                 });
             }
         });
