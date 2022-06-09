@@ -55,7 +55,8 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="9dp"
         android:layout_marginEnd="10dp"
-        app:srcCompat="@drawable/ic_vector_close" />
+        app:srcCompat="@drawable/ic_vector_close"
+        android:background="@null"/>
 
 
 </RelativeLayout>
