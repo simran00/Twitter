@@ -1,9 +1,13 @@
 package com.codepath.apps.restclienttemplate;
 
+import static com.facebook.stetho.inspector.network.ResponseHandlingInputStream.TAG;
+
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,15 +16,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
+import okhttp3.Headers;
+
 public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder> {
+    public static final String TAG = "sabiha";
     Context context;
     List<Tweet> tweets;
+
     private static final int SECOND_MILLIS = 1000;
     private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
     private static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
@@ -56,6 +65,8 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         TextView tvScreenName;
         ImageView ivTweetImage;
         TextView tvRelativeTime;
+        ImageButton ibHeart;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -64,12 +75,15 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvScreenName = itemView.findViewById(R.id.tvScreenName);
             ivTweetImage = itemView.findViewById(R.id.ivTweetImage);
             tvRelativeTime = itemView.findViewById(R.id.tvRelativeTime);
+            ibHeart = itemView.findViewById(R.id.ibHeart);
         }
 
         public void bind(Tweet tweet) {
             tvBody.setText(tweet.body);
             tvScreenName.setText(tweet.user.screenName);
             tvRelativeTime.setText(getRelativeTimeAgo(tweet.createdAt));
+            TwitterClient client = TwitterApp.getRestClient(context);
+
             Glide.with(context).load(tweet.user.profileImageUrl).into(ivProfileImage);
             if (tweet.tweetImageUrl != null) {
                 ivTweetImage.setVisibility(View.VISIBLE);
@@ -77,6 +91,36 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             } else {
                 ivTweetImage.setVisibility(View.GONE);
             }
+
+            ibHeart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    client.likeTweet(tweet.id, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Headers headers, JSON json) {
+                            ibHeart.setImageResource(R.drawable.ic_vector_heart);
+                            Log.i(TAG, "onSuccess to like tweet");
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                            client.unlikeTweet(tweet.id, new JsonHttpResponseHandler() {
+                                @Override
+                                public void onSuccess(int statusCode, Headers headers, JSON json) {
+                                    ibHeart.setImageResource(R.drawable.ic_vector_heart_stroke);
+                                    Log.i(TAG, "onSuccess to unlike tweet");
+                                }
+
+                                @Override
+                                public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                                    Log.i(TAG, "onFailure to unlike tweet");
+                                }
+                            });
+                            Log.e(TAG, "onFailure to like tweet", throwable);
+                        }
+                    });
+                }
+            });
         }
 
     }
@@ -122,4 +166,6 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
         return "";
     }
+
+
 }

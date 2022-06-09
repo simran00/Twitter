@@ -14,6 +14,7 @@ public class Tweet {
     public String createdAt;
     public User user;
     public String tweetImageUrl;
+    public String id;
 
     public Tweet(){}
 
@@ -32,6 +33,7 @@ public class Tweet {
         }
         tweet.createdAt = jsonObject.getString("created_at");
         tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
+        tweet.id = jsonObject.getString("id");
         return tweet;
     }
 
