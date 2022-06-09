@@ -3,6 +3,7 @@ package com.codepath.apps.restclienttemplate;
 import static com.facebook.stetho.inspector.network.ResponseHandlingInputStream.TAG;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,7 +66,9 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         TextView tvScreenName;
         ImageView ivTweetImage;
         TextView tvRelativeTime;
+
         ImageButton ibHeart;
+        ImageButton ibRetweet;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -76,6 +79,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             ivTweetImage = itemView.findViewById(R.id.ivTweetImage);
             tvRelativeTime = itemView.findViewById(R.id.tvRelativeTime);
             ibHeart = itemView.findViewById(R.id.ibHeart);
+            ibRetweet = itemView.findViewById(R.id.ibRetweet);
         }
 
         public void bind(Tweet tweet) {
@@ -117,6 +121,34 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                                 }
                             });
                             Log.e(TAG, "onFailure to like tweet", throwable);
+                        }
+                    });
+                }
+            });
+
+            ibRetweet.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    client.retweetTweet(tweet.id, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Headers headers, JSON json) {
+                            //ibRetweet.setBackgroundColor(Color.parseColor("#0000FF"));
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                            client.unRetweetTweet(tweet.id, new JsonHttpResponseHandler() {
+                                @Override
+                                public void onSuccess(int statusCode, Headers headers, JSON json) {
+                                    //ibRetweet.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                                    Log.i(TAG, "onSuccess to un-retweet tweet");
+                                }
+
+                                @Override
+                                public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                                    Log.i(TAG, "onFailure to un-retweet tweet");
+                                }
+                            });
                         }
                     });
                 }
