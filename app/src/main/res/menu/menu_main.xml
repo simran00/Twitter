@@ -3,8 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/twitter_logo"
+        android:icon="@drawable/ic_launcher_twitter"
+        android:title="Logo"
+        app:showAsAction="always"
+        android:layout_gravity="center"/>
+    <item
         android:id="@+id/compose"
-        android:icon="@android:drawable/ic_menu_edit"
+        android:icon="@drawable/vector_compose_fab"
         android:title="Compose"
         app:showAsAction="always" />
 </menu>

@@ -1,9 +1,6 @@
 package com.codepath.apps.restclienttemplate;
 
-import static com.facebook.stetho.inspector.network.ResponseHandlingInputStream.TAG;
-
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -120,7 +117,6 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                 return diff / DAY_MILLIS + " d";
             }
         } catch (ParseException e) {
-            // Log.i(TAG, "getRelativeTimeAgo failed");
             e.printStackTrace();
         }
 
