@@ -18,7 +18,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_toEndOf="@+id/ivProfileImage"
-        android:text="rpandey123" />
+        android:text="rpandey123"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tvBody"
@@ -40,4 +41,13 @@
         android:layout_toEndOf="@+id/ivProfileImage"
         android:visibility="visible"
         tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/tvRelativeTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@+id/tvScreenName"
+        android:text="1h"
+        android:textStyle="italic" />
 </RelativeLayout>

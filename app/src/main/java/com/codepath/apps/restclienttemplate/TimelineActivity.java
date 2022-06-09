@@ -53,6 +53,7 @@ public class TimelineActivity extends AppCompatActivity {
         rvTweets.setAdapter(adapter);
 
         populateHomeTimeline();
+
         onLogoutButton();
 
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);

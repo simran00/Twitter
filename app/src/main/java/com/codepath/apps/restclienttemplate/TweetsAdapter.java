@@ -1,6 +1,9 @@
 package com.codepath.apps.restclienttemplate;
 
+import static com.facebook.stetho.inspector.network.ResponseHandlingInputStream.TAG;
+
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +16,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder> {
     Context context;
     List<Tweet> tweets;
+    private static final int SECOND_MILLIS = 1000;
+    private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
+    private static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
+    private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
 
     public TweetsAdapter(Context context, List<Tweet> tweets) {
         this.context = context;
@@ -48,6 +58,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         TextView tvBody;
         TextView tvScreenName;
         ImageView ivTweetImage;
+        TextView tvRelativeTime;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -55,11 +66,13 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvBody = itemView.findViewById(R.id.tvBody);
             tvScreenName = itemView.findViewById(R.id.tvScreenName);
             ivTweetImage = itemView.findViewById(R.id.ivTweetImage);
+            tvRelativeTime = itemView.findViewById(R.id.tvRelativeTime);
         }
 
         public void bind(Tweet tweet) {
             tvBody.setText(tweet.body);
             tvScreenName.setText(tweet.user.screenName);
+            tvRelativeTime.setText(getRelativeTimeAgo(tweet.createdAt));
             Glide.with(context).load(tweet.user.profileImageUrl).into(ivProfileImage);
             if (tweet.tweetImageUrl != null) {
                 ivTweetImage.setVisibility(View.VISIBLE);
@@ -79,5 +92,38 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     public void addAll(List<Tweet> list) {
         tweets.addAll(list);
         notifyDataSetChanged();
+    }
+
+    public String getRelativeTimeAgo(String rawJsonDate) {
+        String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
+        SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
+        sf.setLenient(true);
+
+        try {
+            long time = sf.parse(rawJsonDate).getTime();
+            long now = System.currentTimeMillis();
+
+            final long diff = now - time;
+            if (diff < MINUTE_MILLIS) {
+                return "just now";
+            } else if (diff < 2 * MINUTE_MILLIS) {
+                return "a minute ago";
+            } else if (diff < 50 * MINUTE_MILLIS) {
+                return diff / MINUTE_MILLIS + " m";
+            } else if (diff < 90 * MINUTE_MILLIS) {
+                return "an hour ago";
+            } else if (diff < 24 * HOUR_MILLIS) {
+                return diff / HOUR_MILLIS + " h";
+            } else if (diff < 48 * HOUR_MILLIS) {
+                return "yesterday";
+            } else {
+                return diff / DAY_MILLIS + " d";
+            }
+        } catch (ParseException e) {
+            // Log.i(TAG, "getRelativeTimeAgo failed");
+            e.printStackTrace();
+        }
+
+        return "";
     }
 }
