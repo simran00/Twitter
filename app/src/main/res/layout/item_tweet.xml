@@ -58,7 +58,7 @@
         android:layout_below="@+id/ivTweetImage"
         android:layout_alignParentStart="true"
         android:layout_marginStart="120dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/twitter_reply" />
 
     <ImageButton
@@ -67,7 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/ivTweetImage"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:layout_toEndOf="@+id/ibReply"
         android:background="@drawable/ic_vector_retweet_stroke" />
 
@@ -77,7 +77,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/ivTweetImage"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:layout_toEndOf="@+id/ibRetweet"
         android:background="@drawable/ic_vector_heart_stroke" />
 
