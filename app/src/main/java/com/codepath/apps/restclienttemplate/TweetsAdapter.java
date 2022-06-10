@@ -133,6 +133,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                         @Override
                         public void onSuccess(int statusCode, Headers headers, JSON json) {
                             //ibRetweet.setBackgroundColor(Color.parseColor("#0000FF"));
+                            ibRetweet.setBackgroundResource(R.drawable.ic_vector_retweet_blue);
                         }
 
                         @Override
@@ -141,6 +142,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                                 @Override
                                 public void onSuccess(int statusCode, Headers headers, JSON json) {
                                     //ibRetweet.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                                    ibRetweet.setBackgroundResource(R.drawable.ic_vector_retweet_stroke);
                                     Log.i(TAG, "onSuccess to un-retweet tweet");
                                 }
 
